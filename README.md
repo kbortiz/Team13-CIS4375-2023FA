@@ -3,10 +3,6 @@ https://documenter.getpostman.com/view/19866658/2s93eU2ZUa
 
 # Data Platform Project Setup
 
-This project has been developed over time by students in the CIS 4339 course.
-
-The current iteration is based on development done by Elliot Farmer Garcia, Agatha	Molski and Chris	Blanco in Fall of 2022.
-
 Requirements:
 
 This project uses NodeJS and MongoDB.
