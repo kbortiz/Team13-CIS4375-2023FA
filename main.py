@@ -28,33 +28,6 @@ authorizedusers = [
 ]
 
 
-@app.route('/api/addcar', methods=['POST'])  # endpoint to add a car
-def post_add_car():
-    conn = create_connection("cis4375.cpbp75z8fnop.us-east-2.rds.amazonaws.com", "admin", "password",
-                             "DaviNails")
-    sql = "SELECT * FROM car"
-
-    username = request.headers[
-        'username']  # get the header parameters. request headers are interpreted as dictionaries, so value access is easy and direct
-    password = request.headers['password']
-
-    for au in authorizedusers:  # loop over all users and find one that is authorized to access
-        if au['username'] == username and au['password'] == password:
-            request_data = request.get_json()  # provids json inputs for the needed data to be inputted
-            newvin = request_data['vin']
-            newmake = request_data['make']
-            newmodel = request_data['model']
-            newyear = request_data['year']
-            addquery = "INSERT INTO car (vin, make, model, year) VALUES ('%s', '%s', '%s',%s)" % (
-            newvin, newmake, newmodel, newyear)
-            execute_query(conn, addquery)  # executes above query to add the provided data to table
-            newmessage = "Added car " + newmake + " " + newmodel
-            logquery = "INSERT INTO logs (date, name, message) VALUES ('%s', '%s', '%s')" % (
-            today, username, newmessage)
-            execute_query(conn, logquery)  # executes above query to write to the table log
-            return 'POST REQUEST WORKED'
-    return 'SECURITY ERROR'
-
 @app.route('/customers', methods=['GET'])  # Endpoint to return all customers
 def api_get_customers():
     conn = create_connection("cis4375.cpbp75z8fnop.us-east-2.rds.amazonaws.com", "admin", "password",
@@ -122,6 +95,33 @@ def post_create_promo():
     execute_query(conn, addreview)  # executes above query to add the provided data to table
     return 'Promotion Added'
 
+
+@app.route('/api/addcar', methods=['POST'])  # endpoint to add a car
+def post_add_car():
+    conn = create_connection("cis4375.cpbp75z8fnop.us-east-2.rds.amazonaws.com", "admin", "password",
+                             "DaviNails")
+    sql = "SELECT * FROM car"
+
+    username = request.headers[
+        'username']  # get the header parameters. request headers are interpreted as dictionaries, so value access is easy and direct
+    password = request.headers['password']
+
+    for au in authorizedusers:  # loop over all users and find one that is authorized to access
+        if au['username'] == username and au['password'] == password:
+            request_data = request.get_json()  # provids json inputs for the needed data to be inputted
+            newvin = request_data['vin']
+            newmake = request_data['make']
+            newmodel = request_data['model']
+            newyear = request_data['year']
+            addquery = "INSERT INTO car (vin, make, model, year) VALUES ('%s', '%s', '%s',%s)" % (
+            newvin, newmake, newmodel, newyear)
+            execute_query(conn, addquery)  # executes above query to add the provided data to table
+            newmessage = "Added car " + newmake + " " + newmodel
+            logquery = "INSERT INTO logs (date, name, message) VALUES ('%s', '%s', '%s')" % (
+            today, username, newmessage)
+            execute_query(conn, logquery)  # executes above query to write to the table log
+            return 'POST REQUEST WORKED'
+    return 'SECURITY ERROR'
 
 @app.route('/api/deletecar', methods=['DELETE'])  # endpoint to delete a car
 def api_delete_car():
